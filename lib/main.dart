@@ -2,7 +2,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lyricyst_app/TextEditorPage.dart';
-import 'package:quiver/time.dart';
+import 'package:spinner_input/spinner_input.dart';
 import 'LoopAnimController.dart';
 
 void main() {

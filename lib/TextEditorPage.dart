@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:spinner_input/spinner_input.dart';
 
 class TextEditorPage extends StatefulWidget {
   TextEditorPage({Key key}) : super(key: key);
@@ -13,6 +14,10 @@ class TextEditorPage extends StatefulWidget {
 class _TextEditorPageState extends State<TextEditorPage> {
     final seedTextController = TextEditingController();
     final seedTextFocusNode = FocusNode();
+    final List<String> artists = <String>['Taylor Swift', 'Eminem'];
+    String currentArtist = 'Taylor Swift';
+    double temperature = 0.1;
+    int nWords = 3;
 
     @override
     void initState() {
@@ -30,19 +35,75 @@ class _TextEditorPageState extends State<TextEditorPage> {
   @override
   Widget build(BuildContext context) {
 
-
     return Scaffold(
         backgroundColor: Colors.white,
         drawer: Drawer(
           elevation: 3,
           child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               DrawerHeader(
                 child: Padding(
                     padding: EdgeInsets.only(top: 20),
-                    child: Text('OPTIONS', style: TextStyle(fontWeight: FontWeight.bold),),
+                    child: Text('OPTIONS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
                 ),
-              )
+              ),
+
+                Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Text('Artist: ')
+                ),
+
+                Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: DropdownButton<String>(
+                        value: currentArtist,
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 20,
+                        elevation: 8,
+                        onChanged: (newVal) => setState(() => currentArtist = newVal),
+
+                        items: artists.map<DropdownMenuItem<String>>((String name) {
+                            return DropdownMenuItem<String>(child: Padding(child: Text(name), padding: EdgeInsets.only(right: 10)), value: name);
+                        }).toList(),
+                    ),
+                ),
+
+                Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Text('Temperature: ')
+                ),
+
+                Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: SpinnerInput(
+                        step: 0.1,
+                        minValue: 0.1,
+                        fractionDigits: 1,
+                        maxValue: 1.0,
+                        middleNumberPadding: EdgeInsets.symmetric(horizontal: 10),
+                        spinnerValue: temperature,
+                        onChange: (newVal) => setState(() => temperature = newVal),
+                    )
+                ),
+
+                Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Text('Number of words: ')
+                ),
+
+                Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: SpinnerInput(
+                          step: 1,
+                          minValue: 1,
+                          maxValue: 600,
+                          spinnerValue: nWords.toDouble(),
+                          middleNumberPadding: EdgeInsets.symmetric(horizontal: 17),
+                          fractionDigits: 0,
+                          onChange: (newVal) => setState(() => nWords = newVal.toInt()),
+                      )
+                ),
             ],
           ),
         ),
@@ -103,7 +164,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                                                                 color: Color.fromRGBO(234, 244, 205, 1),
                                                                                 width: 2)),
                                                                 ),
-                                                                cursorColor: Color.fromRGBO(220, 220, 220, 1),
+                                                                cursorColor: Color.fromRGBO(234, 244, 205, 1),
                                                                 enabled: true,
                                                             )
                                                         ])),
@@ -119,7 +180,18 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                                                         controller: seedTextController,
                                                                         focusNode: seedTextFocusNode,
                                                                         style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 15),
-                                                                        decoration: null,
+                                                                        decoration: InputDecoration(
+                                                                              hintText: 'Type here',
+                                                                              hintStyle: TextStyle(
+                                                                                    fontFamily: 'RhodiumLibre',
+                                                                                    fontSize: 15,
+                                                                                    color: Color.fromRGBO(229, 235, 194, 1)),
+                                                                            border: InputBorder.none,
+                                                                            enabledBorder: InputBorder.none,
+                                                                            disabledBorder: InputBorder.none,
+                                                                            focusedBorder: InputBorder.none,
+                                                                        ),
+                                                                        cursorColor: Color.fromRGBO(229, 235, 194, 1),
                                                                         maxLines: null,
                                                                     ),
                                                                 ),
