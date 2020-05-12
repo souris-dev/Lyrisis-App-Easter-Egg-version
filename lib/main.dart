@@ -1,18 +1,16 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lyricyst_app/TextEditorPage.dart';
-import 'package:spinner_input/spinner_input.dart';
-import 'LoopAnimController.dart';
+import 'package:lyricyst_app/pages/TextEditorPage.dart';
+import 'controllers/LoopAnimController.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.dark,
-        statusBarColor: Color.fromARGB(255, 36, 44, 70),
-        statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+      statusBarColor: Color.fromARGB(255, 36, 44, 70),
+      statusBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Color.fromRGBO(249, 249, 227, 30),
-      systemNavigationBarIconBrightness: Brightness.dark
-  ));
+      systemNavigationBarIconBrightness: Brightness.dark));
   runApp(MyApp());
 }
 
@@ -26,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(),
-        debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -43,12 +41,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-      super.initState();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -89,29 +86,27 @@ class _MyHomePageState extends State<MyHomePage> {
               left: 50,
               bottom: 40,
               child: GestureDetector(
-                onTap: ()  async {
+                onTap: () async {
                   setState(() {
                     cont.animation = 'start_btn_selected';
                     cont.loopAmt = -2;
                   });
                   await Future.delayed(Duration(milliseconds: 170), () {
-                      setState(() {
-                          cont.animation = 'start_btn_unselected';
-                          cont.loopAmt = -1;
-                      });
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                              return TextEditorPage();
-                          }
-                      ));
-                    }
-                  );
+                    setState(() {
+                      cont.animation = 'start_btn_unselected';
+                      cont.loopAmt = -1;
+                    });
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return TextEditorPage();
+                    }));
+                  });
                 },
                 child: SizedBox(
-                  width: 300,
-                  height: 100,
-                  child: FlareActor('assets/Lyricyst_StartBtn.flr', controller: cont, animation: 'start_btn_unselected')
-                ),
+                    width: 300,
+                    height: 100,
+                    child: FlareActor('assets/Lyricyst_StartBtn.flr',
+                        controller: cont, animation: 'start_btn_unselected')),
               )),
         ],
       ),

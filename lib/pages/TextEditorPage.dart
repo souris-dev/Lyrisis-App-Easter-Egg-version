@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:lyricyst_app/pages/PredictionPage.dart';
 import 'package:spinner_input/spinner_input.dart';
 
+// ignore: must_be_immutable
 class TextEditorPage extends StatefulWidget {
   TextEditorPage({Key key}) : super(key: key);
 
@@ -19,6 +21,9 @@ class _TextEditorPageState extends State<TextEditorPage> {
   double temperature = 0.1;
   int nWords = 3;
 
+  GlobalKey<PredictionPageState> predictionKey;
+  bool predictionsDemanded = false;
+
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -29,6 +34,12 @@ class _TextEditorPageState extends State<TextEditorPage> {
         systemNavigationBarIconBrightness: Brightness.dark));
 
     super.initState();
+  }
+
+  void onPredictionChosen(String item) {
+    setState(() {
+      seedTextController.text += ' ' + item;
+    });
   }
 
   @override
@@ -235,13 +246,44 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                   height:
                                       MediaQuery.of(context).size.height / 15),
                               onTap: () {
-                                Scaffold.of(context).openDrawer();
+                                setState(() {
+                                  //predictionKey
+                                  //.currentState.predictionDemanded = true;
+                                  predictionsDemanded = true;
+                                });
                               }),
                         ),
                       ],
                     ),
                   ),
                 ],
+              ),
+              AnimatedPositioned(
+                top: predictionsDemanded
+                    ? MediaQuery.of(context).size.height * 2 / 3
+                    : MediaQuery.of(context).size.height,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                duration: Duration(milliseconds: 700),
+                child: PredictionPage(
+                  key: predictionKey,
+                  seedController: seedTextController,
+                  artist: currentArtist,
+                  nwords: nWords,
+                  temp: temperature,
+                  predictionDemanded: true,
+                  onCloseRequested: () {
+                    setState(() {
+                      predictionsDemanded = false;
+                    });
+                  },
+                  onChipPressed: (chipText) {
+                    setState(() {
+                      seedTextController.text += chipText;
+                    });
+                  },
+                ),
               ),
             ],
           );
