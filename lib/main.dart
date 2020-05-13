@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lyricyst_app/pages/TextEditorPage.dart';
 import 'controllers/LoopAnimController.dart';
+import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -38,10 +40,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final LoopAnimController cont = LoopAnimController("start_btn_unselected");
+  bool pingSuccess = false;
+
+  void pingServer() async {
+    Fluttertoast.showToast(msg: 'Checking connection...');
+    // Ping server once for fast predictions
+    var uri = "https://lyrisis-server.herokuapp.com";
+
+    try {
+      var response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Pinging successful!');
+        setState() => pingSuccess = true;
+      } else {
+        Fluttertoast.showToast(msg: 'Server error!');
+        print('Server RROR code: ' + response.statusCode.toString());
+      }
+    } catch (e) {
+      print('ERROR WHILE PINGING: ' + e.toString());
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    pingServer();
   }
 
   @override
@@ -83,31 +107,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]),
               )),
           Positioned(
-              left: 50,
-              bottom: 40,
-              child: GestureDetector(
-                onTap: () async {
+            left: 50,
+            bottom: 40,
+            child: GestureDetector(
+              onTap: () async {
+                setState(() {
+                  cont.animation = 'start_btn_selected';
+                  cont.loopAmt = -2;
+                });
+                await Future.delayed(Duration(milliseconds: 170), () {
                   setState(() {
-                    cont.animation = 'start_btn_selected';
-                    cont.loopAmt = -2;
+                    cont.animation = 'start_btn_unselected';
+                    cont.loopAmt = -1;
                   });
-                  await Future.delayed(Duration(milliseconds: 170), () {
-                    setState(() {
-                      cont.animation = 'start_btn_unselected';
-                      cont.loopAmt = -1;
-                    });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return TextEditorPage();
-                    }));
-                  });
-                },
-                child: SizedBox(
-                    width: 300,
-                    height: 100,
-                    child: FlareActor('assets/Lyricyst_StartBtn.flr',
-                        controller: cont, animation: 'start_btn_unselected')),
-              )),
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return TextEditorPage();
+                  }));
+                });
+              },
+              child: SizedBox(
+                width: 300,
+                height: 100,
+                child: FlareActor('assets/Lyricyst_StartBtn.flr',
+                    controller: cont, animation: 'start_btn_unselected'),
+              ),
+            ),
+          ),
         ],
       ),
     );

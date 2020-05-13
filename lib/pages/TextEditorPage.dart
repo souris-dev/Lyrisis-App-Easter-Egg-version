@@ -2,27 +2,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:lyricyst_app/controllers/PredictionController.dart';
 import 'package:lyricyst_app/pages/PredictionPage.dart';
 import 'package:spinner_input/spinner_input.dart';
 
-// ignore: must_be_immutable
 class TextEditorPage extends StatefulWidget {
   TextEditorPage({Key key}) : super(key: key);
 
+  final PredictionController predictionController = PredictionController(
+      artist: 'Taylor Swift',
+      temperature: 0.1,
+      nWords: 3,
+      predictionDemanded: false);
   @override
   _TextEditorPageState createState() => _TextEditorPageState();
 }
 
 class _TextEditorPageState extends State<TextEditorPage> {
   final seedTextController = TextEditingController();
-  final seedTextFocusNode = FocusNode();
-  final List<String> artists = <String>['Taylor Swift', 'Eminem'];
-  String currentArtist = 'Taylor Swift';
-  double temperature = 0.1;
-  int nWords = 3;
 
-  GlobalKey<PredictionPageState> predictionKey;
-  bool predictionsDemanded = false;
+  final seedTextFocusNode = FocusNode();
+
+  final List<String> artists = <String>['Taylor Swift', 'Eminem'];
+  //String currentArtist = 'Taylor Swift';
+  //double temperature = 0.1;
+  //int nWords = 3;
+
+  //GlobalKey<PredictionPageState> predictionKey;
+  //bool predictionsDemanded = false;
 
   @override
   void initState() {
@@ -34,6 +41,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
         systemNavigationBarIconBrightness: Brightness.dark));
 
     super.initState();
+    widget.predictionController.seedController = seedTextController;
   }
 
   void onPredictionChosen(String item) {
@@ -64,11 +72,12 @@ class _TextEditorPageState extends State<TextEditorPage> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: DropdownButton<String>(
-                value: currentArtist,
+                value: widget.predictionController.artist,
                 icon: Icon(Icons.arrow_downward),
                 iconSize: 20,
                 elevation: 8,
-                onChanged: (newVal) => setState(() => currentArtist = newVal),
+                onChanged: (newVal) =>
+                    setState(() => widget.predictionController.artist = newVal),
                 items: artists.map<DropdownMenuItem<String>>((String name) {
                   return DropdownMenuItem<String>(
                       child: Padding(
@@ -89,8 +98,9 @@ class _TextEditorPageState extends State<TextEditorPage> {
                   fractionDigits: 1,
                   maxValue: 1.0,
                   middleNumberPadding: EdgeInsets.symmetric(horizontal: 10),
-                  spinnerValue: temperature,
-                  onChange: (newVal) => setState(() => temperature = newVal),
+                  spinnerValue: widget.predictionController.temperature,
+                  onChange: (newVal) => setState(
+                      () => widget.predictionController.temperature = newVal),
                 )),
             Padding(
                 padding: EdgeInsets.only(top: 50),
@@ -101,10 +111,11 @@ class _TextEditorPageState extends State<TextEditorPage> {
                   step: 1,
                   minValue: 1,
                   maxValue: 600,
-                  spinnerValue: nWords.toDouble(),
+                  spinnerValue: widget.predictionController.nWords.toDouble(),
                   middleNumberPadding: EdgeInsets.symmetric(horizontal: 17),
                   fractionDigits: 0,
-                  onChange: (newVal) => setState(() => nWords = newVal.toInt()),
+                  onChange: (newVal) => setState(() =>
+                      widget.predictionController.nWords = newVal.toInt()),
                 )),
           ],
         ),
@@ -194,7 +205,8 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.vertical,
                                     child: TextField(
-                                      controller: seedTextController,
+                                      controller: widget
+                                          .predictionController.seedController,
                                       focusNode: seedTextFocusNode,
                                       style: TextStyle(
                                           fontFamily: 'RhodiumLibre',
@@ -214,6 +226,10 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                       cursorColor:
                                           Color.fromRGBO(229, 235, 194, 1),
                                       maxLines: null,
+                                      onChanged: (_) {
+                                        widget.predictionController
+                                            .newPredsNeeded = true;
+                                      },
                                     ),
                                   ),
                                 ),
@@ -249,7 +265,8 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                 setState(() {
                                   //predictionKey
                                   //.currentState.predictionDemanded = true;
-                                  predictionsDemanded = true;
+                                  widget.predictionController
+                                      .predictionDemanded = true;
                                 });
                               }),
                         ),
@@ -259,28 +276,25 @@ class _TextEditorPageState extends State<TextEditorPage> {
                 ],
               ),
               AnimatedPositioned(
-                top: predictionsDemanded
+                top: widget.predictionController.predictionDemanded
                     ? MediaQuery.of(context).size.height * 2 / 3
                     : MediaQuery.of(context).size.height,
                 bottom: 0,
                 left: 0,
                 right: 0,
-                duration: Duration(milliseconds: 700),
+                duration: Duration(milliseconds: 350),
                 child: PredictionPage(
-                  key: predictionKey,
-                  seedController: seedTextController,
-                  artist: currentArtist,
-                  nwords: nWords,
-                  temp: temperature,
-                  predictionDemanded: true,
+                  //key: predictionKey,
+                  predictionController: widget.predictionController,
                   onCloseRequested: () {
                     setState(() {
-                      predictionsDemanded = false;
+                      widget.predictionController.predictionDemanded = false;
                     });
                   },
                   onChipPressed: (chipText) {
                     setState(() {
-                      seedTextController.text += chipText;
+                      widget.predictionController.seedController.text +=
+                          chipText;
                     });
                   },
                 ),

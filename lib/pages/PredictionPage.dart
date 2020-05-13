@@ -1,91 +1,55 @@
 import 'dart:convert';
 
-import 'package:flutter_tags/flutter_tags.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:lyricyst_app/controllers/PredictionController.dart';
 
 class PredictionPage extends StatefulWidget {
-  PredictionPage(
-      {Key key,
-      this.seedController,
-      this.nwords,
-      this.temp,
-      this.artist,
-      this.onChipPressed,
-      this.onCloseRequested,
-      this.predictionDemanded})
-      : super(key: key);
+  PredictionPage({
+    Key key,
+    this.predictionController,
+    this.onChipPressed,
+    this.onCloseRequested,
+  }) : super(key: key);
 
-  TextEditingController seedController;
-  final double temp;
-  final String artist;
-  final int nwords;
+  final predictionController;
   final Function onChipPressed;
   final Function onCloseRequested;
-  final bool predictionDemanded;
 
   @override
   PredictionPageState createState() {
     var logr = Logger();
-    logr.d('In createState(), predDem: ' + predictionDemanded.toString());
+    logr.d('In createState(), predDem: ' +
+        predictionController.predictionDemanded.toString());
     return PredictionPageState(
-        seedController: seedController,
-        temp: temp,
-        artist: artist,
-        nwords: nwords,
-        onChipPressed: onChipPressed,
-        onCloseRequested: onCloseRequested,
-        predictionDemanded: predictionDemanded);
+      predictionController: predictionController,
+      onChipPressed: onChipPressed,
+      onCloseRequested: onCloseRequested,
+    );
   }
 }
 
 class PredictionPageState extends State<PredictionPage> {
-  TextEditingController seedController;
-  double temp;
-  String artist;
-  int nwords;
+  PredictionController predictionController;
   List<String> predictions;
   Function onChipPressed;
   Function onCloseRequested;
-  bool predictionDemanded;
 
-  bool newPredsNeeded = true;
-
-  PredictionPageState(
-      {this.seedController,
-      this.temp,
-      this.artist,
-      this.nwords,
-      this.onChipPressed,
-      this.onCloseRequested,
-      this.predictionDemanded});
+  PredictionPageState({
+    this.predictionController,
+    this.onChipPressed,
+    this.onCloseRequested,
+  });
 
   Future<void> getPredictions() async {
-    /*
-    var client = http.Client();
+    if (predictionController.predictionDemanded &&
+        predictionController.newPredsNeeded) {
+      predictions = await predictionController.getPredictionsFromServer();
+      predictionController.newPredsNeeded = false;
+    }
 
-    var url = "http://lyrisis-server.herokuapp.com/predict";
-
-    var logger = Logger();
-    try {
-      var response = await client.post(url, body: {
-        'seed': seedController.text,
-        'temperature': temp,
-        'nwords': nwords,
-        'artist': artist
-      });
-
-      setState(() => predictions = json.decode(response.body)['words']);
-
-      logger.d('Response: ' + response.body);
-    } catch (e) {
-      logger.e('Error while retrieveing predictions from server!');
-      logger.e(e.toString());
-    } finally {
-      client.close();
-    }*/
-    if (newPredsNeeded) {
+    /*if (newPredsNeeded) {
       Future.delayed(Duration(milliseconds: 750), () {
         setState(() => predictions = [
               'Hello',
@@ -110,38 +74,28 @@ class PredictionPageState extends State<PredictionPage> {
         logger.d('getPreds done!');
         newPredsNeeded = false;
       });
-    }
+    }*/
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget innerChildNoPrediction = Text('No predictions right now!');
+    Widget innerChildNoPrediction = Text(predictionController.noPredText);
 
     var loggr = Logger();
-    loggr.d(seedController.text);
-    Widget innerChildWithPrediction = predictionDemanded
+    loggr.d(predictionController.seedController.text +
+        " " +
+        predictionController.artistName +
+        " " +
+        predictionController.nWords.toString() +
+        " " +
+        predictionController.temperature.toString());
+
+    Widget innerChildWithPrediction = predictionController.predictionDemanded
         ? FutureBuilder(
             future: getPredictions(),
             builder: (context, snapshot) {
               print(snapshot.connectionState);
               if (snapshot.connectionState == ConnectionState.done) {
-                /*return Tags(
-                  itemCount: predictions.length,
-                  itemBuilder: (index) {
-                    String pred = predictions[index];
-
-                    return ItemTags(
-                      key: Key(pred.toString()),
-                      image: null,
-                      index: index,
-                      icon: null,
-                      title: pred,
-                      active: true,
-                      removeButton: null,
-                      onPressed: onChipPressed(pred),
-                    );
-                  },
-                );*/
                 return Wrap(
                   children: predictions.map<Padding>((str) {
                     return Padding(
@@ -165,14 +119,17 @@ class PredictionPageState extends State<PredictionPage> {
           )
         : null;
 
-    Widget innerChild =
-        predictionDemanded ? innerChildWithPrediction : innerChildNoPrediction;
+    Widget innerChild = predictionController.predictionDemanded
+        ? innerChildWithPrediction
+        : innerChildNoPrediction;
 
     var logger = Logger();
-    logger.d(predictionDemanded);
+    logger.d(predictionController.predictionDemanded);
 
     return Container(
-      height: predictionDemanded ? MediaQuery.of(context).size.height / 3 : 1,
+      height: predictionController.predictionDemanded
+          ? MediaQuery.of(context).size.height / 3
+          : 1,
       width: double.infinity,
       //color: Colors.white, //.fromRGBO(125, 12, 44, 1),
 
