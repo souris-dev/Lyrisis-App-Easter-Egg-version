@@ -40,10 +40,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final LoopAnimController cont = LoopAnimController("start_btn_unselected");
-  bool pingSuccess = false;
+  bool pingTried = false;
 
   void pingServer() async {
-    Fluttertoast.showToast(msg: 'Checking connection...');
+    Fluttertoast.showToast(
+      msg: 'Checking connection...',
+      backgroundColor: Color.fromRGBO(2, 75, 150, 1),
+      textColor: Colors.white,
+    );
     // Ping server once for fast predictions
     var uri = "https://lyrisis-server.herokuapp.com";
 
@@ -51,15 +55,24 @@ class _MyHomePageState extends State<MyHomePage> {
       var response = await http.get(uri);
 
       if (response.statusCode == 200) {
-        Fluttertoast.showToast(msg: 'Pinging successful!');
-        setState() => pingSuccess = true;
+        Fluttertoast.showToast(
+          msg: 'Pinging successful!',
+          backgroundColor: Color.fromRGBO(51, 128, 89, 1),
+          textColor: Colors.white,
+        );
+        setState(() => pingTried = true);
       } else {
-        Fluttertoast.showToast(msg: 'Server error!');
+        Fluttertoast.showToast(
+          msg: 'Server error!',
+          backgroundColor: Color.fromRGBO(168, 61, 61, 1),
+          textColor: Colors.white,
+        );
         print('Server RROR code: ' + response.statusCode.toString());
       }
     } catch (e) {
       print('ERROR WHILE PINGING: ' + e.toString());
     }
+    setState(() => pingTried = true);
   }
 
   @override
@@ -112,8 +125,16 @@ class _MyHomePageState extends State<MyHomePage> {
             child: GestureDetector(
               onTap: () async {
                 setState(() {
-                  cont.animation = 'start_btn_selected';
-                  cont.loopAmt = -2;
+                  if (pingTried) {
+                    cont.animation = 'start_btn_selected';
+                    cont.loopAmt = -2;
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: 'Please wait, still testing connection.',
+                      backgroundColor: Color.fromRGBO(150, 62, 84, 1),
+                      textColor: Colors.white,
+                    );
+                  }
                 });
                 await Future.delayed(Duration(milliseconds: 170), () {
                   setState(() {

@@ -40,18 +40,36 @@ class PredictionController {
     try {
       var response = await client.post(url, body: {
         'seed': seedController.text,
-        'temperature': temperature.toString(),
+        'temp': temperature.toString(),
         'nwords': nWords.toString(),
         'artist': artistName
       });
 
       print(response.body);
-      predictions = json.decode(response.body)['words'];
+
+      predictions =
+          json.decode(response.body)['words'].map<String>((dynamic str) {
+        String word = str.toString();
+
+        // recall that the server strips off \n in the words
+        // so if there are any "" in the predictions
+        // they are probably newlines
+
+        if (word != "") {
+          return word;
+        } else {
+          return '(newline)';
+        }
+      }).toList();
 
       logger.d('Response: ' + response.body);
     } catch (e) {
       logger.e('Error while retrieving predictions from server!');
-      Fluttertoast.showToast(msg: "Sorry, couldn't get predictions!");
+      Fluttertoast.showToast(
+        msg: "Sorry, couldn't get predictions!",
+        backgroundColor: Color.fromRGBO(150, 62, 84, 1),
+        textColor: Colors.white,
+      );
       predictionDemanded = false;
       print(e.toString());
     } finally {

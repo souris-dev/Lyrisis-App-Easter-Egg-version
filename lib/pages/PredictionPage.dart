@@ -48,33 +48,6 @@ class PredictionPageState extends State<PredictionPage> {
       predictions = await predictionController.getPredictionsFromServer();
       predictionController.newPredsNeeded = false;
     }
-
-    /*if (newPredsNeeded) {
-      Future.delayed(Duration(milliseconds: 750), () {
-        setState(() => predictions = [
-              'Hello',
-              'I am',
-              'good',
-              ',',
-              "how",
-              "are",
-              "you?",
-              "I",
-              "am",
-              "fine",
-              "thank",
-              "you",
-              "Okk",
-              "Haha",
-              "yeahh",
-              "Good",
-              "one"
-            ]);
-        var logger = Logger();
-        logger.d('getPreds done!');
-        newPredsNeeded = false;
-      });
-    }*/
   }
 
   @override
@@ -104,10 +77,13 @@ class PredictionPageState extends State<PredictionPage> {
                         textColor: Colors.white,
                         child: Text(str),
                         color: Color.fromRGBO(191, 23, 87, 1),
-                        elevation: 2,
+                        elevation: 3,
                         onPressed: () {
                           onChipPressed(' ' + str);
                         },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
                     );
                   }).toList(),
@@ -128,31 +104,50 @@ class PredictionPageState extends State<PredictionPage> {
 
     return Container(
       height: predictionController.predictionDemanded
-          ? MediaQuery.of(context).size.height / 3
+          ? MediaQuery.of(context).size.height / (2.7)
           : 1,
       width: double.infinity,
       //color: Colors.white, //.fromRGBO(125, 12, 44, 1),
 
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromRGBO(255, 254, 235, 1),
         border: Border(
-          top: BorderSide(color: Colors.black87, width: 0.15),
+          top: BorderSide(color: Color.fromRGBO(199, 197, 175, 1), width: 0.15),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(199, 197, 175, 1),
+            spreadRadius: 1,
+            blurRadius: 15,
+          ),
+        ],
       ),
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: Column(
-          children: <Widget>[
-            Row(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 14),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                IconButton(
-                    icon: Icon(Icons.close, size: 24),
-                    color: Color.fromRGBO(181, 13, 77, 1),
+                RaisedButton(
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.close, color: Colors.white),
+                      ],
+                    ),
+                    color: Colors.black87,
+                    shape: CircleBorder(
+                      side: BorderSide(width: 2),
+                    ),
+                    //borderRadius: BorderRadius.circular(30)),
+                    elevation: 5,
                     onPressed: onCloseRequested),
               ],
             ),
-            Expanded(
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(5),
               child: Scrollbar(
                 child: SingleChildScrollView(
                   child: Wrap(
@@ -163,8 +158,8 @@ class PredictionPageState extends State<PredictionPage> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

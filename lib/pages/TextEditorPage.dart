@@ -277,7 +277,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
               ),
               AnimatedPositioned(
                 top: widget.predictionController.predictionDemanded
-                    ? MediaQuery.of(context).size.height * 2 / 3
+                    ? MediaQuery.of(context).size.height * (1 - 1 / 2.7)
                     : MediaQuery.of(context).size.height,
                 bottom: 0,
                 left: 0,
@@ -294,7 +294,8 @@ class _TextEditorPageState extends State<TextEditorPage> {
                   onChipPressed: (chipText) {
                     setState(() {
                       widget.predictionController.seedController.text +=
-                          chipText;
+                          chipText == " (newline)" ? '\n' : chipText;
+                      widget.predictionController.newPredsNeeded = true;
                     });
                   },
                 ),
