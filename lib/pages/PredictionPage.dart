@@ -50,6 +50,72 @@ class PredictionPageState extends State<PredictionPage> {
     }
   }
 
+  String getPredictionsCompiled() {
+    String out = '';
+
+    for (String pred in predictions) {
+      out += ' ' + (pred == '(newline)' ? '\n' : pred);
+    }
+    return out;
+  }
+
+  Widget getWidgetForMoreWords() {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              child: Wrap(
+                children: <Widget>[
+                  Text(
+                    getPredictionsCompiled(),
+                    style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: RaisedButton(
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.add, color: Colors.white),
+                Text('Add all'),
+              ],
+            ),
+            onPressed: () {
+              onChipPressed(getPredictionsCompiled());
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget getWidgetForLessWords() {
+    return Wrap(
+      children: predictions.map<Padding>((str) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: RaisedButton(
+            textColor: Colors.white,
+            child: Text(str),
+            color: Color.fromRGBO(191, 23, 87, 1),
+            elevation: 3,
+            onPressed: () {
+              onChipPressed(' ' + str);
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget innerChildNoPrediction = Text(predictionController.noPredText);
@@ -68,28 +134,17 @@ class PredictionPageState extends State<PredictionPage> {
             future: getPredictions(),
             builder: (context, snapshot) {
               print(snapshot.connectionState);
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Wrap(
-                  children: predictions.map<Padding>((str) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: RaisedButton(
-                        textColor: Colors.white,
-                        child: Text(str),
-                        color: Color.fromRGBO(191, 23, 87, 1),
-                        elevation: 3,
-                        onPressed: () {
-                          onChipPressed(' ' + str);
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                );
+              if (snapshot.connectionState == ConnectionState.done &&
+                  predictionController.nWords < 51) {
+                return getWidgetForLessWords();
+              } else if (snapshot.connectionState == ConnectionState.done &&
+                  predictionController.nWords >= 51) {
+                return getWidgetForMoreWords();
               } else {
-                return CircularProgressIndicator();
+                return Padding(
+                  padding: EdgeInsets.all(5),
+                  child: CircularProgressIndicator(),
+                );
               }
             },
           )

@@ -55,10 +55,20 @@ class PredictionController {
         // so if there are any "" in the predictions
         // they are probably newlines
 
-        if (word != "") {
-          return word;
+        // TODO: Fix this '\n' thing on the server end
+        // the "" part checking is ok here I guess?
+        print((word != "").toString() + (word == "\n").toString());
+
+        if (nWords < 51) {
+          if (word == "\n") {
+            return "(newline)";
+          } else if (word == "") {
+            return "-";
+          } else {
+            return word.replaceAll('\n', '');
+          }
         } else {
-          return '(newline)';
+          return word;
         }
       }).toList();
 
@@ -76,6 +86,8 @@ class PredictionController {
       client.close();
     }
 
-    return predictions;
+    return predictions.sublist(
+        0, nWords); // only the first nWords words are needed
+    // in case the server was feeling generous as gave us more
   }
 }

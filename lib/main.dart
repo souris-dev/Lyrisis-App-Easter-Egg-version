@@ -136,15 +136,19 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }
                 });
-                await Future.delayed(Duration(milliseconds: 170), () {
-                  setState(() {
-                    cont.animation = 'start_btn_unselected';
-                    cont.loopAmt = -1;
+
+                if (pingTried) {
+                  await Future.delayed(Duration(milliseconds: 170), () {
+                    setState(() {
+                      cont.animation = 'start_btn_unselected';
+                      cont.loopAmt = -1;
+                    });
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return TextEditorPage();
+                    }));
                   });
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return TextEditorPage();
-                  }));
-                });
+                }
               },
               child: SizedBox(
                 width: 300,
