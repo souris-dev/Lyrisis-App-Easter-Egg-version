@@ -11,8 +11,8 @@ class TextEditorPage extends StatefulWidget {
 
   final PredictionController predictionController = PredictionController(
       artist: 'Taylor Swift',
-      temperature: 0.1,
-      nWords: 3,
+      temperature: 0.5,
+      nWords: 5,
       predictionDemanded: false);
   @override
   _TextEditorPageState createState() => _TextEditorPageState();
@@ -76,8 +76,10 @@ class _TextEditorPageState extends State<TextEditorPage> {
                 icon: Icon(Icons.arrow_downward),
                 iconSize: 20,
                 elevation: 8,
-                onChanged: (newVal) =>
-                    setState(() => widget.predictionController.artist = newVal),
+                onChanged: (newVal) => setState(() {
+                  widget.predictionController.newPredsNeeded = true;
+                  widget.predictionController.artist = newVal;
+                }),
                 items: artists.map<DropdownMenuItem<String>>((String name) {
                   return DropdownMenuItem<String>(
                       child: Padding(
@@ -91,32 +93,42 @@ class _TextEditorPageState extends State<TextEditorPage> {
                 padding: EdgeInsets.only(top: 50),
                 child: Text('Temperature: ')),
             Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: SpinnerInput(
-                  step: 0.1,
-                  minValue: 0.1,
-                  fractionDigits: 1,
-                  maxValue: 1.0,
-                  middleNumberPadding: EdgeInsets.symmetric(horizontal: 10),
-                  spinnerValue: widget.predictionController.temperature,
-                  onChange: (newVal) => setState(
-                      () => widget.predictionController.temperature = newVal),
-                )),
+              padding: EdgeInsets.only(top: 20),
+              child: SpinnerInput(
+                step: 0.1,
+                minValue: 0.1,
+                fractionDigits: 1,
+                maxValue: 1.0,
+                middleNumberPadding: EdgeInsets.symmetric(horizontal: 10),
+                spinnerValue: widget.predictionController.temperature,
+                onChange: (newVal) => setState(
+                  () {
+                    widget.predictionController.newPredsNeeded = true;
+                    widget.predictionController.temperature = newVal;
+                  },
+                ),
+              ),
+            ),
             Padding(
                 padding: EdgeInsets.only(top: 50),
                 child: Text('Number of words: ')),
             Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: SpinnerInput(
-                  step: 1,
-                  minValue: 1,
-                  maxValue: 600,
-                  spinnerValue: widget.predictionController.nWords.toDouble(),
-                  middleNumberPadding: EdgeInsets.symmetric(horizontal: 17),
-                  fractionDigits: 0,
-                  onChange: (newVal) => setState(() =>
-                      widget.predictionController.nWords = newVal.toInt()),
-                )),
+              padding: EdgeInsets.only(top: 20),
+              child: SpinnerInput(
+                step: 1,
+                minValue: 1,
+                maxValue: 600,
+                spinnerValue: widget.predictionController.nWords.toDouble(),
+                middleNumberPadding: EdgeInsets.symmetric(horizontal: 17),
+                fractionDigits: 0,
+                onChange: (newVal) => setState(
+                  () {
+                    widget.predictionController.newPredsNeeded = true;
+                    widget.predictionController.nWords = newVal.toInt();
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),

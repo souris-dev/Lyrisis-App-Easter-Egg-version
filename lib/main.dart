@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void pingServer() async {
     Fluttertoast.showToast(
       msg: 'Checking connection...',
-      backgroundColor: Color.fromRGBO(2, 75, 150, 1),
+      backgroundColor: Color.fromRGBO(2, 75, 150, 0.8),
       textColor: Colors.white,
     );
     // Ping server once for fast predictions
@@ -57,14 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
       if (response.statusCode == 200) {
         Fluttertoast.showToast(
           msg: 'Pinging successful!',
-          backgroundColor: Color.fromRGBO(51, 128, 89, 1),
+          backgroundColor: Color.fromRGBO(51, 128, 89, 0.8),
           textColor: Colors.white,
         );
         setState(() => pingTried = true);
       } else {
         Fluttertoast.showToast(
           msg: 'Server error!',
-          backgroundColor: Color.fromRGBO(168, 61, 61, 1),
+          backgroundColor: Color.fromRGBO(168, 61, 61, 0.9),
           textColor: Colors.white,
         );
         print('Server RROR code: ' + response.statusCode.toString());
@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   } else {
                     Fluttertoast.showToast(
                       msg: 'Please wait, still testing connection.',
-                      backgroundColor: Color.fromRGBO(150, 62, 84, 1),
+                      backgroundColor: Color.fromRGBO(150, 62, 84, 0.9),
                       textColor: Colors.white,
                     );
                   }

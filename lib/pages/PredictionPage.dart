@@ -60,37 +60,9 @@ class PredictionPageState extends State<PredictionPage> {
   }
 
   Widget getWidgetForMoreWords() {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: Scrollbar(
-            child: SingleChildScrollView(
-              child: Wrap(
-                children: <Widget>[
-                  Text(
-                    getPredictionsCompiled(),
-                    style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: RaisedButton(
-            child: Row(
-              children: <Widget>[
-                Icon(Icons.add, color: Colors.white),
-                Text('Add all'),
-              ],
-            ),
-            onPressed: () {
-              onChipPressed(getPredictionsCompiled());
-            },
-          ),
-        ),
-      ],
+    return Text(
+      getPredictionsCompiled(),
+      style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 12),
     );
   }
 
@@ -214,6 +186,24 @@ class PredictionPageState extends State<PredictionPage> {
               ),
             ),
           ),
+          51 >= 51
+              ? Align(
+                  alignment: Alignment.bottomRight,
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    color: Colors.deepPurple,
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.add, color: Colors.white),
+                        Text('Add all this'),
+                      ],
+                    ),
+                    onPressed: () {
+                      onChipPressed(getPredictionsCompiled());
+                    },
+                  ),
+                )
+              : Text('')
         ],
       ),
     );
