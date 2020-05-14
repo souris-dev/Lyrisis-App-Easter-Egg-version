@@ -23,13 +23,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
 
   final seedTextFocusNode = FocusNode();
 
-  final List<String> artists = <String>['Taylor Swift', 'Eminem'];
-  //String currentArtist = 'Taylor Swift';
-  //double temperature = 0.1;
-  //int nWords = 3;
-
-  //GlobalKey<PredictionPageState> predictionKey;
-  //bool predictionsDemanded = false;
+  final List<String> artists = <String>['Taylor Swift']; //, 'Eminem'];
 
   @override
   void initState() {

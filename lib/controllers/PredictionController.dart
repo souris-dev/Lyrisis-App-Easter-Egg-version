@@ -4,7 +4,6 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class PredictionController {
   TextEditingController seedController;
@@ -31,6 +30,7 @@ class PredictionController {
   get artistName => artist.replaceAll(' ', '_');
 
   Future<List<String>> getPredictionsFromServer() async {
+    bool errored = false;
     var client = http.Client();
     List<String> predictions = <String>[];
 
@@ -75,19 +75,21 @@ class PredictionController {
       logger.d('Response: ' + response.body);
     } catch (e) {
       logger.e('Error while retrieving predictions from server!');
-      Fluttertoast.showToast(
-        msg: "Sorry, couldn't get predictions!",
-        backgroundColor: Color.fromRGBO(150, 62, 84, 1),
-        textColor: Colors.white,
-      );
-      predictionDemanded = false;
+      errored = true;
       print(e.toString());
     } finally {
       client.close();
     }
 
-    return predictions.sublist(
-        0, nWords); // only the first nWords words are needed
+    if (errored) {
+      throw Exception("Couldn't fetch predictions");
+    }
+
+    // only the first nWords words are needed
     // in case the server was feeling generous as gave us more
+
+    return (predictions.length < nWords
+        ? predictions
+        : predictions.sublist(0, nWords));
   }
 }

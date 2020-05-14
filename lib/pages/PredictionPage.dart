@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:lyricyst_app/controllers/PredictionController.dart';
@@ -43,10 +41,28 @@ class PredictionPageState extends State<PredictionPage> {
   });
 
   Future<void> getPredictions() async {
-    if (predictionController.predictionDemanded &&
-        predictionController.newPredsNeeded) {
-      predictions = await predictionController.getPredictionsFromServer();
-      predictionController.newPredsNeeded = false;
+    try {
+      if (predictionController.predictionDemanded &&
+          predictionController.newPredsNeeded) {
+        predictions = await predictionController.getPredictionsFromServer();
+        predictionController.newPredsNeeded = false;
+      }
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(
+        msg: "Sorry, couldn't get predictions!",
+        backgroundColor: Color.fromRGBO(150, 62, 84, 1),
+        textColor: Colors.white,
+      );
+      Fluttertoast.showToast(
+        msg: "Check connection and try again!",
+        backgroundColor: Color.fromRGBO(150, 62, 84, 1),
+        textColor: Colors.white,
+      );
+
+      setState(() {
+        predictionController.predictionDemanded = false;
+      });
     }
   }
 

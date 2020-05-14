@@ -70,6 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
         print('Server RROR code: ' + response.statusCode.toString());
       }
     } catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Connection error! Check internet.',
+        backgroundColor: Color.fromRGBO(168, 61, 61, 0.9),
+        textColor: Colors.white,
+      );
       print('ERROR WHILE PINGING: ' + e.toString());
     }
     setState(() => pingTried = true);
