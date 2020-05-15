@@ -153,100 +153,90 @@ class _TextEditorPageState extends State<TextEditorPage> {
                           }),
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Wrap(
+                      children: <Widget>[
+                        TextField(
+                          style: TextStyle(
+                              fontFamily: 'RhodiumLibre', fontSize: 20),
+                          decoration: InputDecoration(
+                            hintText: 'Title',
+                            hintStyle: TextStyle(
+                                fontFamily: 'RhodiumLibre',
+                                fontSize: 20,
+                                color: Color.fromRGBO(229, 235, 194, 1)),
+                            contentPadding: EdgeInsets.only(bottom: 10),
+                            border: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color.fromRGBO(234, 244, 205, 1),
+                                width: 2,
+                              ),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Color.fromRGBO(234, 244, 205, 1),
+                                width: 2,
+                              ),
+                            ),
+                            disabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromRGBO(234, 244, 205, 1),
+                                  width: 2),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color.fromRGBO(234, 244, 205, 1),
+                                  width: 2),
+                            ),
+                          ),
+                          cursorColor: Color.fromRGBO(234, 244, 205, 1),
+                          enabled: true,
+                        ),
+                      ],
+                    ),
+                  ),
                   Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Wrap(
-                              children: <Widget>[
-                                TextField(
+                    child: GestureDetector(
+                      onTap: () {
+                        seedTextFocusNode.requestFocus();
+                      },
+                      child: Scrollbar(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.all(20),
+                                child: TextField(
+                                  controller: widget
+                                      .predictionController.seedController,
+                                  focusNode: seedTextFocusNode,
                                   style: TextStyle(
-                                      fontFamily: 'RhodiumLibre', fontSize: 20),
+                                      fontFamily: 'RhodiumLibre', fontSize: 15),
                                   decoration: InputDecoration(
-                                    hintText: 'Title',
+                                    hintText: 'Type here',
                                     hintStyle: TextStyle(
                                         fontFamily: 'RhodiumLibre',
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         color:
                                             Color.fromRGBO(229, 235, 194, 1)),
-                                    contentPadding: EdgeInsets.only(bottom: 10),
-                                    border: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromRGBO(
-                                                234, 244, 205, 1),
-                                            width: 2)),
-                                    enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromRGBO(
-                                                234, 244, 205, 1),
-                                            width: 2)),
-                                    disabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromRGBO(
-                                                234, 244, 205, 1),
-                                            width: 2)),
-                                    focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromRGBO(
-                                                234, 244, 205, 1),
-                                            width: 2)),
+                                    border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
                                   ),
-                                  cursorColor: Color.fromRGBO(234, 244, 205, 1),
-                                  enabled: true,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: GestureDetector(
-                              child: LimitedBox(
-                                maxWidth: double.infinity,
-                                maxHeight:
-                                    MediaQuery.of(context).size.height * 0.6,
-                                child: Scrollbar(
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.vertical,
-                                    child: TextField(
-                                      controller: widget
-                                          .predictionController.seedController,
-                                      focusNode: seedTextFocusNode,
-                                      style: TextStyle(
-                                          fontFamily: 'RhodiumLibre',
-                                          fontSize: 15),
-                                      decoration: InputDecoration(
-                                        hintText: 'Type here',
-                                        hintStyle: TextStyle(
-                                            fontFamily: 'RhodiumLibre',
-                                            fontSize: 15,
-                                            color: Color.fromRGBO(
-                                                229, 235, 194, 1)),
-                                        border: InputBorder.none,
-                                        enabledBorder: InputBorder.none,
-                                        disabledBorder: InputBorder.none,
-                                        focusedBorder: InputBorder.none,
-                                      ),
-                                      cursorColor:
-                                          Color.fromRGBO(229, 235, 194, 1),
-                                      maxLines: null,
-                                      onChanged: (_) {
-                                        widget.predictionController
-                                            .newPredsNeeded = true;
-                                      },
-                                    ),
-                                  ),
+                                  cursorColor: Color.fromRGBO(229, 235, 194, 1),
+                                  maxLines: null,
+                                  onChanged: (_) {
+                                    widget.predictionController.newPredsNeeded =
+                                        true;
+                                  },
                                 ),
                               ),
-                              onTap: () {
-                                seedTextFocusNode.requestFocus();
-                                print('Tap');
-                              },
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -254,12 +244,12 @@ class _TextEditorPageState extends State<TextEditorPage> {
                     child: Row(
                       children: <Widget>[
                         Padding(
-                            padding: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width / 5),
-                            child: Image.asset(
-                                'assets/need_help_label_editor.png',
-                                height:
-                                    MediaQuery.of(context).size.height / 35)),
+                          padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width / 5),
+                          child: Image.asset(
+                              'assets/need_help_label_editor.png',
+                              height: MediaQuery.of(context).size.height / 35),
+                        ),
                         Padding(
                           padding: EdgeInsets.only(left: 32, bottom: 0),
                           child: GestureDetector(
