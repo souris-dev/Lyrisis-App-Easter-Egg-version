@@ -57,7 +57,6 @@ class PredictionController {
 
         // TODO: Fix this '\n' thing on the server end
         // the "" part checking is ok here I guess?
-        print((word != "").toString() + (word == "\n").toString());
 
         if (nWords < 51) {
           if (word == "\n") {

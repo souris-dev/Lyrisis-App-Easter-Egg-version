@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lyricyst_app/controllers/PredictionController.dart';
 import 'package:lyricyst_app/pages/PredictionPage.dart';
 import 'package:spinner_input/spinner_input.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TextEditorPage extends StatefulWidget {
   TextEditorPage({Key key}) : super(key: key);
@@ -62,67 +64,181 @@ class _TextEditorPageState extends State<TextEditorPage> {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(top: 50), child: Text('Artist: ')),
-            Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: DropdownButton<String>(
-                value: widget.predictionController.artist,
-                icon: Icon(Icons.arrow_downward),
-                iconSize: 20,
-                elevation: 8,
-                onChanged: (newVal) => setState(() {
-                  widget.predictionController.newPredsNeeded = true;
-                  widget.predictionController.artist = newVal;
-                }),
-                items: artists.map<DropdownMenuItem<String>>((String name) {
-                  return DropdownMenuItem<String>(
-                      child: Padding(
-                          child: Text(name),
-                          padding: EdgeInsets.only(right: 10)),
-                      value: name);
-                }).toList(),
+            Expanded(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Text('Artist: ')),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: DropdownButton<String>(
+                      value: widget.predictionController.artist,
+                      icon: Icon(Icons.arrow_downward),
+                      iconSize: 20,
+                      elevation: 8,
+                      onChanged: (newVal) => setState(() {
+                        widget.predictionController.newPredsNeeded = true;
+                        widget.predictionController.artist = newVal;
+                      }),
+                      items:
+                          artists.map<DropdownMenuItem<String>>((String name) {
+                        return DropdownMenuItem<String>(
+                            child: Padding(
+                                child: Text(name),
+                                padding: EdgeInsets.only(right: 10)),
+                            value: name);
+                      }).toList(),
+                    ),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Text('Temperature: ')),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: SpinnerInput(
+                      step: 0.1,
+                      minValue: 0.1,
+                      fractionDigits: 1,
+                      maxValue: 1.0,
+                      middleNumberPadding: EdgeInsets.symmetric(horizontal: 10),
+                      spinnerValue: widget.predictionController.temperature,
+                      onChange: (newVal) => setState(
+                        () {
+                          widget.predictionController.newPredsNeeded = true;
+                          widget.predictionController.temperature = newVal;
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Text('Number of words: ')),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: SpinnerInput(
+                      step: 1,
+                      minValue: 1,
+                      maxValue: 600,
+                      spinnerValue:
+                          widget.predictionController.nWords.toDouble(),
+                      middleNumberPadding: EdgeInsets.symmetric(horizontal: 17),
+                      fractionDigits: 0,
+                      onChange: (newVal) => setState(
+                        () {
+                          widget.predictionController.newPredsNeeded = true;
+                          widget.predictionController.nWords = newVal.toInt();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Padding(
-                padding: EdgeInsets.only(top: 50),
-                child: Text('Temperature: ')),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: SpinnerInput(
-                step: 0.1,
-                minValue: 0.1,
-                fractionDigits: 1,
-                maxValue: 1.0,
-                middleNumberPadding: EdgeInsets.symmetric(horizontal: 10),
-                spinnerValue: widget.predictionController.temperature,
-                onChange: (newVal) => setState(
-                  () {
-                    widget.predictionController.newPredsNeeded = true;
-                    widget.predictionController.temperature = newVal;
-                  },
-                ),
+            FlatButton(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(Icons.all_out, color: Colors.lightBlue),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Easter eggs',
+                      style: TextStyle(color: Colors.lightBlue),
+                    ),
+                  ),
+                ],
               ),
+              onPressed: () {
+                Navigator.pop(context);
+                var alertDlg = AlertDialog(
+                  title: Text('Easter Eggs'),
+                  content: Text(
+                      "Want hints about the easter eggs? Visit lyrisis-server.herokuapp.com!"),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text('Go!'),
+                      onPressed: () async {
+                        Navigator.of(context).pop('dialog');
+                        const url = 'https://lyrisis-server.herokuapp.com';
+                        if (await canLaunch(url))
+                          launch(url);
+                        else
+                          Fluttertoast.showToast(msg: "Sorry, can't open URL!");
+                      },
+                    ),
+                    FlatButton(
+                      child: Text('Leave it'),
+                      onPressed: () {
+                        // close the dialog
+                        Navigator.of(context).pop(
+                            'dialog'); // Navigator.pop(context) should work too I guess
+                        Fluttertoast.showToast(msg: 'Okay, as you wish!');
+                      },
+                    ),
+                  ],
+                );
+
+                showDialog(
+                  context: context,
+                  builder: (_) => alertDlg,
+                  barrierDismissible: true,
+                );
+              },
             ),
-            Padding(
-                padding: EdgeInsets.only(top: 50),
-                child: Text('Number of words: ')),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-              child: SpinnerInput(
-                step: 1,
-                minValue: 1,
-                maxValue: 600,
-                spinnerValue: widget.predictionController.nWords.toDouble(),
-                middleNumberPadding: EdgeInsets.symmetric(horizontal: 17),
-                fractionDigits: 0,
-                onChange: (newVal) => setState(
-                  () {
-                    widget.predictionController.newPredsNeeded = true;
-                    widget.predictionController.nWords = newVal.toInt();
-                  },
-                ),
+
+            /*Align(
+              alignment: Alignment.bottomCenter,
+              child: ListView(
+                children: <Widget>[
+                  ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(Icons.all_out),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text('Easter eggs'),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      var alertDlg = AlertDialog(
+                        title: Text('Easter Eggs'),
+                        content: Text(
+                            "Want hints about the easter eggs? Visit https://lyrisis-server.herokuapp.com!"),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Go!'),
+                            onPressed: () async {
+                              const url =
+                                  'https://lyrisis-server.herokuapp.com';
+                              if (await canLaunch(url))
+                                launch(url);
+                              else
+                                Fluttertoast.showToast(
+                                    msg: "Sorry, can't open URL!");
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('Leave it'),
+                            onPressed: () {
+                              // do nothing
+                            },
+                          ),
+                        ],
+                      );
+
+                      showDialog(
+                        context: context,
+                        builder: (_) => alertDlg,
+                        barrierDismissible: true,
+                      );
+                    },
+                  ),
+                ],
               ),
-            ),
+            )*/
           ],
         ),
       ),
