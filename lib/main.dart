@@ -5,6 +5,7 @@ import 'package:lyricyst_app/pages/TextEditorPage.dart';
 import 'controllers/LoopAnimController.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'controllers/ArtistUnlockManager.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -13,6 +14,7 @@ void main() {
       statusBarIconBrightness: Brightness.light,
       systemNavigationBarColor: Color.fromRGBO(249, 249, 227, 30),
       systemNavigationBarIconBrightness: Brightness.dark));
+
   runApp(MyApp());
 }
 
@@ -84,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     pingServer();
+    ArtistUnlockManager.initArtists();
   }
 
   @override
