@@ -187,58 +187,6 @@ class _TextEditorPageState extends State<TextEditorPage> {
                 );
               },
             ),
-
-            /*Align(
-              alignment: Alignment.bottomCenter,
-              child: ListView(
-                children: <Widget>[
-                  ListTile(
-                    title: Row(
-                      children: <Widget>[
-                        Icon(Icons.all_out),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text('Easter eggs'),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      var alertDlg = AlertDialog(
-                        title: Text('Easter Eggs'),
-                        content: Text(
-                            "Want hints about the easter eggs? Visit https://lyrisis-server.herokuapp.com!"),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text('Go!'),
-                            onPressed: () async {
-                              const url =
-                                  'https://lyrisis-server.herokuapp.com';
-                              if (await canLaunch(url))
-                                launch(url);
-                              else
-                                Fluttertoast.showToast(
-                                    msg: "Sorry, can't open URL!");
-                            },
-                          ),
-                          FlatButton(
-                            child: Text('Leave it'),
-                            onPressed: () {
-                              // do nothing
-                            },
-                          ),
-                        ],
-                      );
-
-                      showDialog(
-                        context: context,
-                        builder: (_) => alertDlg,
-                        barrierDismissible: true,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            )*/
           ],
         ),
       ),
