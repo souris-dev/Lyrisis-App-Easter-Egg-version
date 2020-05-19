@@ -108,36 +108,44 @@ class _TextEditorPageState extends State<TextEditorPage> {
                       }),
                       items: artists.map<DropdownMenuItem<String>>((String name) {
                         return DropdownMenuItem<String>(
-                          // TODO: Try switching GestureDetector and Padding
-                          child: GestureDetector(
-                            child: Padding(child: Text(name), padding: EdgeInsets.only(right: 10)),
-                            onLongPress: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: Text('Lock Artist'),
-                                  content: Text('Do you want to lock (hide) $name?'),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop('dialog');
-                                        ArtistUnlockManager.lockArtist(name);
-                                        setState(() {
-                                          artists.remove(name);
-                                        });
-                                      },
-                                      child: Text('Yes'),
+                          child: Padding(
+                            child: GestureDetector(
+                              child: Text(name),
+                              onLongPress: () {
+                                if (name != 'Taylor Swift') {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text('Lock Artist'),
+                                      content: Text('Do you want to lock (hide) $name?'),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop('dialog');
+                                            Navigator.of(context).pop();
+                                            ArtistUnlockManager.lockArtist(name);
+                                            setState(() {
+                                              artists.remove(name);
+                                            });
+                                          },
+                                          child: Text('Yes'),
+                                        ),
+                                        FlatButton(
+                                          child: Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop('dialog');
+                                          },
+                                        )
+                                      ],
                                     ),
-                                    FlatButton(
-                                      child: Text('No'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop('dialog');
-                                      },
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
+                                  );
+                                }
+                                else {
+                                  Fluttertoast.showToast(msg: "You can't lock Taylor Swift");
+                                }
+                              },
+                            ),
+                            padding: EdgeInsets.only(right: 10),
                           ),
                           value: name,
                         );
