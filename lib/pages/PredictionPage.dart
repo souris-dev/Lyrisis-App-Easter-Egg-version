@@ -18,8 +18,7 @@ class PredictionPage extends StatefulWidget {
   @override
   PredictionPageState createState() {
     var logr = Logger();
-    logr.d('In createState(), predDem: ' +
-        predictionController.predictionDemanded.toString());
+    logr.d('In createState(), predDem: ' + predictionController.predictionDemanded.toString());
     return PredictionPageState(
       predictionController: predictionController,
       onChipPressed: onChipPressed,
@@ -42,8 +41,7 @@ class PredictionPageState extends State<PredictionPage> {
 
   Future<void> getPredictions() async {
     try {
-      if (predictionController.predictionDemanded &&
-          predictionController.newPredsNeeded) {
+      if (predictionController.predictionDemanded && predictionController.newPredsNeeded) {
         predictions = await predictionController.getPredictionsFromServer();
         predictionController.newPredsNeeded = false;
       }
@@ -83,6 +81,19 @@ class PredictionPageState extends State<PredictionPage> {
   }
 
   Widget getWidgetForLessWords() {
+    // The following is not how this really should be done
+    // keeping scalability in mind... but it's OK for this hobby project
+    Map<String, Color> colors = {
+      'Taylor Swift': Color.fromRGBO(191, 23, 87, 1),
+      'Eminem': Color.fromRGBO(117, 40, 184, 1),
+      'Adele': Color.fromRGBO(23, 163, 42, 1),
+      'Celine Dion': Color.fromRGBO(15, 150, 144, 1),
+      'Shaivy': Color.fromRGBO(150, 80, 15, 1),
+      'Meraki': Color.fromRGBO(150, 15, 127, 1),
+      'A Girl': Color.fromRGBO(179, 41, 160, 1),
+      'A Boy': Color.fromRGBO(15, 94, 150, 1),
+    };
+
     return Wrap(
       children: predictions.map<Padding>((str) {
         return Padding(
@@ -90,7 +101,7 @@ class PredictionPageState extends State<PredictionPage> {
           child: RaisedButton(
             textColor: Colors.white,
             child: Text(str),
-            color: Color.fromRGBO(191, 23, 87, 1),
+            color: colors[predictionController.artist],
             elevation: 3,
             onPressed: () {
               onChipPressed(' ' + str);
@@ -122,11 +133,9 @@ class PredictionPageState extends State<PredictionPage> {
             future: getPredictions(),
             builder: (context, snapshot) {
               print(snapshot.connectionState);
-              if (snapshot.connectionState == ConnectionState.done &&
-                  predictionController.nWords < 51) {
+              if (snapshot.connectionState == ConnectionState.done && predictionController.nWords < 51) {
                 return getWidgetForLessWords();
-              } else if (snapshot.connectionState == ConnectionState.done &&
-                  predictionController.nWords >= 51) {
+              } else if (snapshot.connectionState == ConnectionState.done && predictionController.nWords >= 51) {
                 return getWidgetForMoreWords();
               } else {
                 return Padding(
@@ -138,17 +147,13 @@ class PredictionPageState extends State<PredictionPage> {
           )
         : null;
 
-    Widget innerChild = predictionController.predictionDemanded
-        ? innerChildWithPrediction
-        : innerChildNoPrediction;
+    Widget innerChild = predictionController.predictionDemanded ? innerChildWithPrediction : innerChildNoPrediction;
 
     var logger = Logger();
     logger.d(predictionController.predictionDemanded);
 
     return Container(
-      height: predictionController.predictionDemanded
-          ? MediaQuery.of(context).size.height / (2.7)
-          : 1,
+      height: predictionController.predictionDemanded ? MediaQuery.of(context).size.height / (2.7) : 1,
       width: double.infinity,
       //color: Colors.white, //.fromRGBO(125, 12, 44, 1),
 
@@ -202,24 +207,22 @@ class PredictionPageState extends State<PredictionPage> {
               ),
             ),
           ),
-          51 >= 51
-              ? Align(
-                  alignment: Alignment.bottomRight,
-                  child: RaisedButton(
-                    textColor: Colors.white,
-                    color: Colors.deepPurple,
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.add, color: Colors.white),
-                        Text('Add all this'),
-                      ],
-                    ),
-                    onPressed: () {
-                      onChipPressed(getPredictionsCompiled());
-                    },
-                  ),
-                )
-              : Text('')
+          Align(
+            alignment: Alignment.bottomRight,
+            child: RaisedButton(
+              textColor: Colors.white,
+              color: Colors.deepPurple,
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.add, color: Colors.white),
+                  Text('Add all this'),
+                ],
+              ),
+              onPressed: () {
+                onChipPressed(getPredictionsCompiled());
+              },
+            ),
+          ),
         ],
       ),
     );

@@ -40,7 +40,7 @@ class ArtistUnlockManagerOld {
 }
 
 class ArtistUnlockManager {
-  static List<String> artistsAvailable = ['Taylor Swift', 'Eminem', 'Adele', 'Celine Dion', 'Shaivy', 'Meraki'];
+  static List<String> artistsAvailable = ['Taylor Swift', 'Eminem', 'Adele', 'Celine Dion', 'A Girl', 'Shaivy', 'Meraki', 'A Boy', 'Souris'];
 
   static void initArtists() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

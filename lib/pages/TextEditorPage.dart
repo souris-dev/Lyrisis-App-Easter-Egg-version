@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -139,8 +141,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                       ],
                                     ),
                                   );
-                                }
-                                else {
+                                } else {
                                   Fluttertoast.showToast(msg: "You can't lock Taylor Swift");
                                 }
                               },
@@ -368,31 +369,36 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                     if (unlockedSomething) {
                                       showDialog(
                                         context: context,
-                                        builder: (_) => AlertDialog(
-                                          // TODO: Randomize the title
-                                          title: Text('Congrats!'),
-                                          content: Text('You have unlocked $unlockedArtist!'),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                              onPressed: () => Navigator.of(context).pop('dialog'),
-                                              child: Text('Great!'),
-                                            ),
-                                            FlatButton(
-                                              child: Text('Re-lock'),
-                                              onPressed: () {
-                                                setState(() {
-                                                  Navigator.of(context).pop('dialog');
-                                                  ArtistUnlockManager.lockArtist(unlockedArtist);
-                                                  if (artists.contains(unlockedArtist)) {
-                                                    artists.remove(unlockedArtist);
-                                                  }
-                                                });
-                                                // unnecessary, but still
-                                                unlockedSomething = false;
-                                              },
-                                            )
-                                          ],
-                                        ),
+                                        builder: (_) {
+                                          List<String> titles = ['Congrats!', 'Wow!', 'Great!', 'Yay!', 'Hurray!', 'Hey!'];
+
+                                          int rand = Random().nextInt(titles.length);
+
+                                          return AlertDialog(
+                                            title: Text(titles[rand]), // Randomize the title for some more fun
+                                            content: Text('You have unlocked $unlockedArtist!'),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                onPressed: () => Navigator.of(context).pop('dialog'),
+                                                child: Text('Great!'),
+                                              ),
+                                              FlatButton(
+                                                child: Text('Re-lock'),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    Navigator.of(context).pop('dialog');
+                                                    ArtistUnlockManager.lockArtist(unlockedArtist);
+                                                    if (artists.contains(unlockedArtist)) {
+                                                      artists.remove(unlockedArtist);
+                                                    }
+                                                  });
+                                                  // unnecessary, but still
+                                                  unlockedSomething = false;
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        },
                                       );
                                     }
 
