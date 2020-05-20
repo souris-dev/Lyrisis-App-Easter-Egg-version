@@ -127,9 +127,9 @@ class PredictionPageState extends State<PredictionPage> {
       }
     } else {
       if (pc.nWords < 10) {
-        return false;
-      } else {
         return true;
+      } else {
+        return false;
       }
     }
   }

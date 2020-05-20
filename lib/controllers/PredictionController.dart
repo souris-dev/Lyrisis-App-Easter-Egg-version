@@ -47,8 +47,7 @@ class PredictionController {
 
       print(response.body);
 
-      predictions =
-          json.decode(response.body)['words'].map<String>((dynamic str) {
+      predictions = json.decode(response.body)['words'].map<String>((dynamic str) {
         String word = str.toString();
 
         // recall that the server strips off \n in the words
@@ -58,7 +57,9 @@ class PredictionController {
         // TODO: Fix this '\n' thing on the server end
         // the "" part checking is ok here I guess?
 
-        if (nWords < 51) {
+        int longWordLim = (artistName != 'Souris' && artistName != 'Meraki') ? 50 : 10;
+
+        if (nWords < longWordLim) {
           if (word == "\n") {
             return "(newline)";
           } else if (word == "") {
@@ -87,8 +88,6 @@ class PredictionController {
     // only the first nWords words are needed
     // in case the server was feeling generous as gave us more
 
-    return (predictions.length < nWords
-        ? predictions
-        : predictions.sublist(0, nWords));
+    return (predictions.length < nWords ? predictions : predictions.sublist(0, nWords));
   }
 }
