@@ -127,6 +127,17 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                             Navigator.of(context).pop();
                                             ArtistUnlockManager.lockArtist(name);
                                             setState(() {
+                                              // Just removing the artist from the list will cause an error
+                                              // if that artist was the currently selected one
+
+                                              // In that case, replace the current artist with the previous one
+                                              if (widget.predictionController.artist == name) {
+                                                // Note that there will be atleast one name in the list
+                                                // i.e, Taylor Swift. So no need to to check for index bounds
+
+                                                // But still I will check... I guess
+                                                widget.predictionController.artist = artists[max(0, artists.indexOf(name) - 1)];
+                                              }
                                               artists.remove(name);
                                             });
                                           },
@@ -342,9 +353,8 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                     String unlockedArtist = '';
 
                                     // Regular unlock for actual artists
-                                    for (String artist in availableArtists.sublist(0, 6)) {
-                                      if (str.endsWith('I love ' + artist + "'s songs") &&
-                                          !artists.contains(artist)) {
+                                    for (String artist in availableArtists.sublist(0, 5)) {
+                                      if (str.endsWith('I love ' + artist + "'s songs") && !artists.contains(artist)) {
                                         ArtistUnlockManager.unlockArtist(artist);
                                         unlockedSomething = true;
                                         unlockedArtist = artist;
@@ -353,27 +363,27 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                     }
 
                                     // Nasty if-else  ladder for the jokes
-                                    if (str.endsWith('Shaivy doodh ki dhuli hai')) {
+                                    if (str.endsWith('Shaivy doodh ki dhuli hai') && !artists.contains('Shaivy')) {
                                       String artist = 'Shaivy';
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;
                                       unlockedArtist = artist;
-                                    } else if (str.endsWith("I love Souris' poems")) {
+                                    } else if (str.endsWith("I love Souris' poems") && !artists.contains('Souris')) {
                                       String artist = 'Souris';
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;
                                       unlockedArtist = artist;
-                                    } else if (str.endsWith("I love me.r.a_ki's poems")) {
+                                    } else if (str.endsWith("I love me.r.a_ki's poems") && !artists.contains('Meraki')) {
                                       String artist = 'Meraki';
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;
                                       unlockedArtist = artist;
-                                    } else if (str.endsWith('I wanna talk like a boy')) {
+                                    } else if (str.endsWith('I wanna talk like a boy') && !artists.contains('A Boy')) {
                                       String artist = 'A Boy';
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;
                                       unlockedArtist = artist;
-                                    } else if (str.endsWith('I wanna talk like a girl')) {
+                                    } else if (str.endsWith('I wanna talk like a girl') && !artists.contains('A Girl')) {
                                       String artist = 'A Girl';
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;
