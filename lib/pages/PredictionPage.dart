@@ -87,6 +87,7 @@ class PredictionPageState extends State<PredictionPage> {
       'Taylor Swift': Color.fromRGBO(191, 23, 87, 1),
       'Eminem': Color.fromRGBO(117, 40, 184, 1),
       'Adele': Color.fromRGBO(23, 163, 42, 1),
+      'Kanye West': Color.fromRGBO(85, 97, 11, 1),
       'Celine Dion': Color.fromRGBO(15, 150, 144, 1),
       'Souris': Color.fromRGBO(17, 64, 97, 1),
       'Shaivy': Color.fromRGBO(150, 80, 15, 1),
@@ -116,6 +117,23 @@ class PredictionPageState extends State<PredictionPage> {
     );
   }
 
+  bool shouldGetChips() {
+    var pc = predictionController;
+    if (pc.artist != 'Meraki' && pc.artist != 'Souris') {
+      if (pc.nWords < 50) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (pc.nWords < 10) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget innerChildNoPrediction = Text(predictionController.noPredText);
@@ -134,10 +152,12 @@ class PredictionPageState extends State<PredictionPage> {
             future: getPredictions(),
             builder: (context, snapshot) {
               print(snapshot.connectionState);
-              if (snapshot.connectionState == ConnectionState.done && predictionController.nWords < 51) {
-                return getWidgetForLessWords();
-              } else if (snapshot.connectionState == ConnectionState.done && predictionController.nWords >= 51) {
-                return getWidgetForMoreWords();
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (shouldGetChips()) {
+                  return getWidgetForLessWords();
+                } else {
+                  return getWidgetForMoreWords();
+                }
               } else {
                 return Padding(
                   padding: EdgeInsets.all(5),
