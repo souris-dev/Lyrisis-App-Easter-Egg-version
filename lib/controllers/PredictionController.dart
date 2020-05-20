@@ -88,6 +88,14 @@ class PredictionController {
     // only the first nWords words are needed
     // in case the server was feeling generous as gave us more
 
-    return (predictions.length < nWords ? predictions : predictions.sublist(0, nWords));
+    if (artistName != 'Souris' && artistName != 'Meraki') {
+      return (predictions.length < nWords ? predictions : predictions.sublist(0, nWords));
+    } else {
+      if (nWords < 10) {
+        return (predictions.length < nWords ? predictions : predictions.sublist(0, nWords));
+      } else {
+        return predictions;
+      }
+    }
   }
 }
