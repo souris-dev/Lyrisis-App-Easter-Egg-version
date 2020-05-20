@@ -88,6 +88,7 @@ class PredictionPageState extends State<PredictionPage> {
       'Eminem': Color.fromRGBO(117, 40, 184, 1),
       'Adele': Color.fromRGBO(23, 163, 42, 1),
       'Celine Dion': Color.fromRGBO(15, 150, 144, 1),
+      'Souris': Color.fromRGBO(17, 64, 97, 1),
       'Shaivy': Color.fromRGBO(150, 80, 15, 1),
       'Meraki': Color.fromRGBO(150, 15, 127, 1),
       'A Girl': Color.fromRGBO(179, 41, 160, 1),
