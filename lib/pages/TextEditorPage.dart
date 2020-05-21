@@ -354,7 +354,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
 
                                     // Regular unlock for actual artists
                                     for (String artist in availableArtists.sublist(0, 5)) {
-                                      if (str.endsWith('I love ' + artist + "'s songs") && !artists.contains(artist)) {
+                                      if (str.endsWith('I <3 ' + artist + "'s songs") && !artists.contains(artist)) {
                                         ArtistUnlockManager.unlockArtist(artist);
                                         unlockedSomething = true;
                                         unlockedArtist = artist;
@@ -368,12 +368,12 @@ class _TextEditorPageState extends State<TextEditorPage> {
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;
                                       unlockedArtist = artist;
-                                    } else if (str.endsWith("I love Souris' poems") && !artists.contains('Souris')) {
+                                    } else if (str.endsWith("I <3 Souris' poems") && !artists.contains('Souris')) {
                                       String artist = 'Souris';
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;
                                       unlockedArtist = artist;
-                                    } else if (str.endsWith("I love me.r.a_ki's poems") && !artists.contains('Meraki')) {
+                                    } else if (str.endsWith("I <3 me.r.a_ki's poems") && !artists.contains('Meraki')) {
                                       String artist = 'Meraki';
                                       ArtistUnlockManager.unlockArtist(artist);
                                       unlockedSomething = true;

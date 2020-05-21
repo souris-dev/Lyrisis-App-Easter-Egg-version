@@ -17,8 +17,6 @@ class PredictionPage extends StatefulWidget {
 
   @override
   PredictionPageState createState() {
-    var logr = Logger();
-    logr.d('In createState(), predDem: ' + predictionController.predictionDemanded.toString());
     return PredictionPageState(
       predictionController: predictionController,
       onChipPressed: onChipPressed,
@@ -74,9 +72,12 @@ class PredictionPageState extends State<PredictionPage> {
   }
 
   Widget getWidgetForMoreWords() {
-    return Text(
-      getPredictionsCompiled(),
-      style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 12),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+      child: Text(
+        getPredictionsCompiled(),
+        style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 12),
+      ),
     );
   }
 
