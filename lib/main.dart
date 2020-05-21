@@ -1,7 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lyricyst_app/pages/TextEditorPage.dart';
+import 'package:lyricyst_app/pages/TextEditorPageNew.dart';
 import 'controllers/LoopAnimController.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
@@ -95,38 +95,38 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: <Widget>[
           Positioned.fill(
-              child: Image.asset('assets/bg_screen1_notext_light4.png',
-                  fit: BoxFit.fill)),
+            child: Image.asset('assets/bg_screen1_notext_light4.png', fit: BoxFit.fill),
+          ),
           Positioned(
-              left: 40,
-              top: 98,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                child: Wrap(children: <Widget>[
+            left: 40,
+            top: 98,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.75,
+              child: Wrap(
+                children: <Widget>[
                   Text(
                     'Short of words?',
-                    style: TextStyle(
-                        fontFamily: 'RhodiumLibre',
-                        fontSize: 48,
-                        color: Color.fromARGB(255, 36, 44, 70)),
+                    style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 48, color: Color.fromARGB(255, 36, 44, 70)),
                   )
-                ]),
-              )),
+                ],
+              ),
+            ),
+          ),
           Positioned(
-              left: 40,
-              top: MediaQuery.of(context).size.height * 0.6 + 10,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.75,
-                child: Wrap(children: <Widget>[
+            left: 40,
+            top: MediaQuery.of(context).size.height * 0.6 + 10,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.75,
+              child: Wrap(
+                children: <Widget>[
                   Text(
                     'Ask me!',
-                    style: TextStyle(
-                        fontFamily: 'RhodiumLibre',
-                        fontSize: 32,
-                        color: Color.fromARGB(255, 34, 57, 85)),
+                    style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 32, color: Color.fromARGB(255, 34, 57, 85)),
                   )
-                ]),
-              )),
+                ],
+              ),
+            ),
+          ),
           Positioned(
             left: 50,
             bottom: 40,
@@ -151,9 +151,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       cont.animation = 'start_btn_unselected';
                       cont.loopAmt = -1;
                     });
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return TextEditorPage();
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return TextEditorPageNew();
                     }));
                   });
                 }
@@ -161,8 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 width: 300,
                 height: 100,
-                child: FlareActor('assets/Lyricyst_StartBtn.flr',
-                    controller: cont, animation: 'start_btn_unselected'),
+                child: FlareActor('assets/Lyricyst_StartBtn.flr', controller: cont, animation: 'start_btn_unselected'),
               ),
             ),
           ),

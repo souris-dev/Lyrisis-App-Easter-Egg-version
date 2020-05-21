@@ -11,7 +11,7 @@ description: Lyrics genration app
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.2+1
+version: 1.1.0+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -69,6 +69,7 @@ flutter:
     - assets/bg_screen1_notext_light4.png
     - assets/drawer_open_arrow.png
     - assets/screen2_bg.png
+    - assets/popup_arrow_editor_down.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
