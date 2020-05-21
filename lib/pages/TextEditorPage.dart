@@ -479,6 +479,7 @@ class _TextEditorPageState extends State<TextEditorPage> {
                 bottom: 0,
                 left: 0,
                 right: 0,
+                curve: Curves.easeOutCubic,
                 duration: Duration(milliseconds: 350),
                 child: PredictionPage(
                   //key: predictionKey,
