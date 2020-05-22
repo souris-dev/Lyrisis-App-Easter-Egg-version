@@ -527,7 +527,7 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
                     ),
                   ),
                   AnimatedContainer(
-                    duration: Duration(milliseconds: 350),
+                    duration: Duration(milliseconds: 520),
                     curve: Curves.easeOutCubic,
                     child: PredictionPage(
                       //key: predictionKey,
@@ -535,7 +535,6 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
                       onCloseRequested: () {
                         setState(() {
                           widget.predictionController.predictionDemanded = false;
-                          seedTextFocusNode.requestFocus();
                         });
                       },
                       onChipPressed: (chipText) {
