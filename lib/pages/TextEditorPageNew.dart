@@ -535,6 +535,7 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
                       onCloseRequested: () {
                         setState(() {
                           widget.predictionController.predictionDemanded = false;
+                          seedTextFocusNode.requestFocus();
                         });
                       },
                       onChipPressed: (chipText) {
