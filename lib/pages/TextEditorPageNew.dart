@@ -22,9 +22,8 @@ class TextEditorPageNew extends StatefulWidget {
 
 class _TextEditorPageNewState extends State<TextEditorPageNew> {
   final seedTextController = TextEditingController();
-
+  final titleTextFocusNode = FocusNode();
   final seedTextFocusNode = FocusNode();
-
   List<String> artists = <String>[];
 
   void initArtists() async {
@@ -67,7 +66,45 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
     super.initState();
     widget.predictionController.seedController = seedTextController;
     initArtists();
+
+    // Close the prediction subwindow when the keyboard appears
+    // keyboard_visibility causes build to fail in release config
+    /*
+    KeyboardVisibilityNotification().addNewListener(onShow: () {
+      setState(() {
+        widget.predictionController.predictionDemanded = false;
+      });
+    });*/
+
+    // Here's a roundabout method:
+
+    seedTextFocusNode.addListener(() {
+      if (seedTextFocusNode.hasPrimaryFocus) {
+        setState(() => widget.predictionController.predictionDemanded = false);
+      }
+    });
   }
+
+  // NOTE: One can use !(MediaQuery.of(context).viewInsets.bottom == 0)
+  // to detect keyboard too
+  // but that may not work for floating keyboards and is NOT equivalent to isKeyboardVisible
+
+  // Also, viewInsets.bottom will not work correctly if this widget (the widget in which this)
+  // viewInsets is referenced) is a child of another widget, as each child has its own MediaQuery.
+  // In this case, it would be using viewInsets.bottom in PredictionPage
+  // as it is the child of TextEditorPageNew
+
+  // For this, we have the workaround of finding out the screen size and the parent size
+  // if the parent size / scaffold size is less than the screen size
+  // the keyboard could be open
+
+  get isKeyboardVisible {
+    // For now, this is okay I guess, because TextEditorPageNew is not a child widget
+    // but the page on its own, so
+    return !(MediaQuery.of(context).viewInsets.bottom == 0);
+  }
+
+  // NOTE: ValueNotifier with isKeyboardVisible does not work here
 
   void onPredictionChosen(String item) {
     setState(() {
@@ -287,6 +324,7 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
                     child: Wrap(
                       children: <Widget>[
                         TextField(
+                          focusNode: titleTextFocusNode,
                           style: TextStyle(fontFamily: 'RhodiumLibre', fontSize: 20),
                           decoration: InputDecoration(
                             hintText: 'Title',
@@ -460,9 +498,6 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
                           child: GestureDetector(
                               child: AnimatedSwitcher(
                                 duration: Duration(milliseconds: 200),
-                                //transitionBuilder: (Widget child, Animation<double> anim) {
-                                //  return ScaleTransition(child: child, scale: anim,);
-                                //},
                                 switchInCurve: Curves.easeInCubic,
                                 switchOutCurve: Curves.easeOutCubic,
                                 child: widget.predictionController.predictionDemanded
@@ -473,9 +508,18 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  //predictionKey
-                                  //.currentState.predictionDemanded = true;
-                                  widget.predictionController.predictionDemanded = !widget.predictionController.predictionDemanded;
+                                  if (titleTextFocusNode.hasPrimaryFocus) {
+                                    Fluttertoast.showToast(
+                                        msg: 'Sorry, no help for the title!',
+                                        backgroundColor: Colors.orange,
+                                        textColor: Colors.white);
+                                    return;
+                                  }
+                                  // This removes focus from the textfield, putting the keyboard down if it's there
+                                  seedTextFocusNode.unfocus();
+                                  // use FocusScope.of(context).unfocus() if we don't have a dedicated focusNode
+                                  widget.predictionController.predictionDemanded =
+                                      !widget.predictionController.predictionDemanded;
                                 });
                               }),
                         ),
@@ -504,31 +548,6 @@ class _TextEditorPageNewState extends State<TextEditorPageNew> {
                   ),
                 ],
               ),
-              /*AnimatedPositioned(
-                top: widget.predictionController.predictionDemanded
-                    ? MediaQuery.of(context).size.height * (1 - 1 / 2.7)
-                    : MediaQuery.of(context).size.height,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                curve: Curves.easeOutCubic,
-                duration: Duration(milliseconds: 350),
-                child: PredictionPage(
-                  //key: predictionKey,
-                  predictionController: widget.predictionController,
-                  onCloseRequested: () {
-                    setState(() {
-                      widget.predictionController.predictionDemanded = false;
-                    });
-                  },
-                  onChipPressed: (chipText) {
-                    setState(() {
-                      widget.predictionController.seedController.text += chipText == " (newline)" ? '\n' : chipText;
-                      widget.predictionController.newPredsNeeded = true;
-                    });
-                  },
-                ),
-              ),*/
             ],
           );
         },
